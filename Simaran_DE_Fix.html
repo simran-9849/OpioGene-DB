@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Load Google Charts -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>opioid database</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333; /* Dark gray font color */
+            background-color: #f4f4f4; /* Light gray background color */
+        }
+
+        header {
+            padding: 20px;
+            padding-bottom: 20px;
+            text-align: center;
+            color: #333; /* Dark gray font color */
+            display: flex;
+            align-items: center;
+            font-size: 20px; 
+            font-weight: bold;         
+            background-image: url('https://images.unsplash.com/photo-1454117096348-e4abbeba002c?ixlib=rb-4.0.3');
+            background-size: cover;
+            background-position: center;
+        }
+        
+
+        .subtab-button {
+    background-color: #666; /* Dark gray background color */
+    color: #fff; /* White font color */
+    padding: 10px 20px; /* Adjust padding as needed */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; /* Adjust font size as needed */
+    margin-right: 10px; /* Adjust margin between buttons */
+}
+
+.subtab-button:hover {
+    background-color: #555; /* Darker gray background color on hover */
+}
+
+
+        .logo {
+            width: 100px;             
+            height: auto; 
+            margin-right: 20px; 
+        }
+        .header-text {
+            flex-grow: 1; 
+            text-align: center;
+            margin-right: 135px; 
+        }
+
+        nav {
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #ccc; /* Light gray background color */
+        }
+        nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #333; /* Dark gray font color */
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px; /* Smaller font size */
+        }
+        .logo {
+            width: 120px; /* Adjust the width to your desired size */
+            height: auto;
+            margin-bottom: 10px; /* Maintain aspect ratio */
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ccc; /* Light gray background color */
+            min-width: 160px;
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: #333; /* Dark gray font color */
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px; /* Smaller font size */
+        }
+        .dropdown-content a:hover {
+            background-color: #ddd; /* Slightly darker gray background color */
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+
+
+        .tab {
+            background-color: #666; /* Dark gray background color */
+            color: #f4f4f4; /* Light gray font color */
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-size: 16px; /* Larger font size */
+            font-weight: bold; /* Bold font weight */
+            letter-spacing: 1px; /* Increased letter spacing */
+        }
+
+        .panel {
+            background-color: #f4f4f4; /* Light gray background color */
+            color: #333; /* Dark gray font color */
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 14px; /* Smaller font size */
+            display: inline-block;
+        }
+
+        footer {
+            color: #333; /* Dark gray font color */
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #ccc; /* Light gray background color */
+            font-size: 14px; /* Smaller font size */
+        }
+
+        .subtab-button {
+    background-color: #666; /* Dark gray background color */
+    color: #fff; /* White font color */
+    padding: 10px 20px; /* Adjust padding as needed */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; /* Adjust font size as needed */
+    margin-right: 10px; /* Adjust margin between buttons */
+}
+
+.subtab-button:hover {
+    background-color: #555; /* Darker gray background color on hover */
+}
+
+.panel {
+    background-color: #f9f9f9; /* Light gray background color */
+    border: 1px solid #ddd; /* Light gray border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 20px; /* Padding around content */
+    margin-bottom: 20px; /* Bottom margin */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.panel h2 {
+    margin-top: 0; /* Remove top margin for heading */
+}
+
+.regulation-options {
+    margin-bottom: 20px; /* Bottom margin for radio buttons */
+}
+
+.regulation-options input[type="radio"] {
+    margin-right: 10px; /* Right margin between radio buttons */
+    display: none; /* Hide the default radio buttons */
+}
+
+.regulation-options label {
+    margin-right: 20px; /* Right margin for labels */
+    cursor: pointer; /* Show pointer cursor on hover */
+}
+
+/* Customize radio buttons to use custom styles */
+.regulation-options label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%; /* Full width */
+    height: 8px; /* Height of the slider */
+    background: #d3d3d3; /* Gray background */
+    outline: none; /* Remove default focus styling */
+    opacity: 0.7; /* Transparency */
+    -webkit-transition: .2s; /* 0.2 second transition on hover */
+    transition: opacity .2s;
+    border-radius: 5px; /* Rounded corners */
+}
+
+/* Mouse over effect */
+.slider:hover {
+    opacity: 1; /* Fully visible */
+}
+
+/* Slider handle */
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px; /* Set a specific slider handle width */
+    height: 16px; /* Slider handle height */
+    background: #4CAF50; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+    border-radius: 50%; /* Round the slider handle */
+}
+
+.slider::-moz-range-thumb {
+    width: 16px; /* Set a specific slider handle width */
+    height: 16px; /* Slider handle height */
+    background: #4CAF50; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+    border-radius: 50%; /* Round the slider handle */
+}
+
+/* Style for checked radio buttons */
+.regulation-options input[type="radio"]:checked + label::before {
+    background-color: #007bff; /* Blue color for checked radio button */
+}
+
+.dropdown-container {
+    margin-bottom: 20px; /* Bottom margin for dropdown container */
+}
+
+.dropdown-container label {
+    display: block; /* Make labels block-level elements */
+    margin-bottom: 5px; /* Bottom margin for labels */
+}
+
+.dropdown-container select {
+    width: 100%; /* Full width for dropdown menus */
+    padding: 8px; /* Padding for dropdown menus */
+    border: 1px solid #ccc; /* Border for dropdown menus */
+    border-radius: 4px; /* Rounded corners for dropdown menus */
+    background-color: #fff; /* White background color for dropdown menus */
+    font-size: 14px; /* Font size for dropdown menus */
+    color: #333; /* Text color for dropdown menus */
+    cursor: pointer; /* Show pointer cursor on hover */
+}
+.panel label {
+    font-size: 18px; /* Larger font size */
+    font-weight: bold; /* Bold font weight */
+}
+
+.panel button {
+    background-color: #4CAF50; /* Green background color */
+    border: none; /* Remove border */
+    color: white; /* White text color */
+    padding: 10px 20px; /* Padding */
+    text-align: center; /* Center-align text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Make it inline block */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Cursor style */
+    border-radius: 5px; /* Border radius */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.panel button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+#histogramChart2 {
+    position: absolute;
+    top: 60%;
+    right: 20%;
+    transform: translateY(-50%);
+}
+
+#heatmap-container {
+    position: absolute;
+    top: 60%;
+    right: 20%;
+    transform: translateY(-50%);
+}
+   </style>
+
+</head>
+<body>
+
+<header>
+    <img src="LOGO.jpg" alt="Website Logo" class="logo">
+    <div class="header-text">
+        <h1>OpioGeneDB</h1>
+    </div>
+</header>
+
+<nav>
+    <a href="#" onclick="loadContent('home')">Home</a>
+    <a href="#" onclick="loadContent('about')">About</a>
+    <div class="dropdown">
+        <a href="#" class="dropbtn">Data</a>
+        <div class="dropdown-content">
+            <a href="#" onclick="loadContent('metadata')">Metadata</a>
+            <a href="#" onclick="loadContent('counts')">Counts Data</a>
+            <a href="#" onclick="loadContent('genes')">Differential Genes</a>
+            <a href="#" onclick="loadContent('gsea')">GSEA</a>
+            <a href="#" onclick="loadContent('cna')">CNA</a>
+        </div>
+    </div>
+    <a href="#" onclick="loadContent('help')">Help</a>
+</nav>
+
+<section id="content">
+<p style="font-size: 24px;">The project's objective is to streamline the management and interpretation of RNA-seq data obtained from placental cells, a pivotal process in elucidating the molecular underpinnings of placental function and response to external stimuli.</p> 
+<p style="font-size: 24px;">Its multifaceted interface encompasses distinct sections dedicated to metadata retrieval, count data examination, and the exploration of differentially expressed genes, with a particular focus on elucidating the impact of opioid drug consumption patterns across varying temporal contexts.</p> 
+<p style="font-size: 24px;">This database will change how we study placental biology and pharmacology by gathering sample information and showing DESeq-2 plots in one easy-to-use place.</p>
+<p style="font-size: 24px;">The databse proves as a helpful resource to help in learning more about the study about how the placenta works and its importance for human health. It gives researchers useful tools to come up with more ideas and explore data.</p>
+</section>
+
+<footer>
+    <p style="font-size: 13px; font-weight: bold;">&copy; This webpage has been developed by Abhiuday Singh Parihar, Arshiya Saxena and Simran Singh with Dr. Huiping Zhang as faculty advisor at Boston University School of Medicine as a part of BF768 Spring 2024 course by Dr. Gary Benson</p>
+</footer>
+
+<script>
+    function loadContent(contentType) {
+        var contentElement = document.getElementById('content');
+        switch (contentType) {
+            case 'home':
+                contentElement.innerHTML = `
+<p style="font-size: 24px;">The project\'s objective is to streamline the management and interpretation of RNA-seq data obtained from placental cells, a pivotal process in elucidating the molecular underpinnings of placental function and response to external stimuli.</p> 
+<p style="font-size: 24px;">Its multifaceted interface encompasses distinct sections dedicated to metadata retrieval, count data examination, and the exploration of differentially expressed genes, with a particular focus on elucidating the impact of opioid drug consumption patterns across varying temporal contexts.</p> 
+<p style="font-size: 24px;">This database will change how we study placental biology and pharmacology by gathering sample information and showing DESeq-2 plots in one easy-to-use place.</p>
+<p style="font-size: 24px;">The databse proves as a helpful resource to help in learning more about the study about how the placenta works and its importance for human health. It gives researchers useful tools to come up with more ideas and explore data.</p>
+        `;
+                break;
+            case 'about':
+                contentElement.innerHTML = `
+        <h2 style="font-size: 20px;">Project Overview</h2>
+        <p style="font-size: 16px;">The project focuses on managing and analyzing RNA-seq data obtained from placental cells. Placenta, a vital organ during pregnancy, plays a crucial role in supporting fetal development and maintaining maternal-fetal health.</p>
+        <h2 style="font-size: 20px;">Data Analysis</h2>
+        <p style="font-size: 16px;">By examining RNA-seq data, researchers can gain insights into gene expression patterns within placental cells, shedding light on their functions and responses to various stimuli, including opioid drug consumption. The project's interface is designed to facilitate easy access to different aspects of the data. It includes sections dedicated to metadata, counts data, and analysis of differentially expressed genes (DEGs).</p>
+        <h2 style="font-size: 20px;">Key Features</h2>
+        <p style="font-size: 16px;">Metadata provides essential information about each sample, such as the characteristics of the individuals from whom the samples were obtained and experimental conditions. Count data represents the number of RNA-seq reads mapped to each gene, serving as the basis for quantifying gene expression levels. Analysis of DEGs allows researchers to identify genes whose expression levels significantly change in response to opioid drug consumption over time, offering valuable insights into the molecular mechanisms underlying the effects of these drugs on placental cells.</p>
+        <h2 style="font-size: 20px;">DESeq-2 Integration</h2>
+        <p style="font-size: 16px;">One of the key features of the project is its integration of DESeq-2 plots, which visualize gene expression differences between different conditions or groups. DESeq-2 is a widely used tool for differential gene expression analysis in RNA-seq data, and its plots provide intuitive visual representations of gene expression patterns. By incorporating DESeq-2 plots into the platform, researchers can easily explore and interpret the results of their analyses, gaining a deeper understanding of the impact of opioid drug consumption on placental gene expression.</p>
+        <h2 style="font-size: 20px;">Impact</h2>
+        <p style="font-size: 16px;">Overall, the project holds significant promise for advancing our understanding of placental biology and pharmacology. By providing a centralized repository for RNA-seq data and analysis tools, it empowers researchers to investigate the effects of opioid drugs on placental cells in a comprehensive and accessible manner. This knowledge could ultimately inform efforts to improve maternal and fetal health outcomes in populations affected by opioid use.</p>
+    `;
+                break;
+
+
+            case 'metadata':
+                loadMetadata();
+                break;
+            case 'counts':
+                loadCountsData();
+                break;
+            case 'genes':
+                loadGenes();
+                break;
+            case 'gsea':
+                loadGSEA();
+                break;
+            case 'help':
+                loadHelpContent();
+                break;
+            default:
+                loadWGCNA();
+                break;
+        }
+    }
+
+    // Define the loadMetadata function
+    // This function is to load the metadata search UI
+function loadMetadata() {
+    var contentElement = document.getElementById("content");
+    contentElement.innerHTML = `
+        <h1 style="text-align: center;">Metadata Search</h1>
+        <div style="text-align: center;">
+            <h3>Search by SampleID</h3>
+            <input type="text" id="sampleIdInput">
+            <button onclick="searchSample()">Search</button>
+            <button id="resetSearchButton" onclick="resetSearch()">Reset</button>
+            <button onclick="showHelp('metadataSearch')">Help</button>
+        </div>
+        <h2 style="text-align: center;">Generate</h2>
+        <div style="text-align: center;">
+            <button id="generateTableButton" onclick="generateTable()">Generate Table</button>
+            <div id="metadataResults" style="margin-top: 20px;"></div>
+        </div>
+    `;
+}
+
+
+
+      // Define the loadCountsData function
+      function loadCountsData() {
+        var contentElement = document.getElementById("content");
+        contentElement.innerHTML = `
+        <div id="subtabs">
+          <button class="subtab-button" onclick="loadCountsDataContent('subtab1')">Heatmap</button>
+          <button class="subtab-button" onclick="loadCountsDataContent('subtab2')">PCA plot</button>
+        </div>
+        <div id="subcontent">
+            <!-- Sub-content will be loaded here -->
+        </div>
+        <div id="" style="display: none;"></div>
+      `;
+      }
+    
+    // Event listener to ensure DOM content is fully loaded before executing JavaScript
+document.addEventListener("DOMContentLoaded", function() {
+    // Add event listener for the "Reset Filters" button
+    var resetFiltersButton = document.getElementById("resetFiltersButton");
+    if (resetFiltersButton) {
+        resetFiltersButton.addEventListener("click", function() {
+            resetOptions();
+        });
+    }
+});
+
+    // Function to reset all filter values
+    function resetOptions() {
+        // Clear selected options in filter dropdowns
+        document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+            radio.checked = false;
+        });
+        document.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
+            checkbox.checked = false;
+        });
+        // Clear search input
+        document.getElementById("sampleIdInput").value = "";
+    }
+
+    // Event listener for the "Reset Filters" button
+    document.addEventListener("DOMContentLoaded", function() {
+        // Your JavaScript code here
+        document.getElementById("resetFiltersButton").addEventListener("click", function() {
+            resetOptions();
+        });
+    });
+
+    // Event listener for the "Reset" button near search
+    document.getElementById("resetSearchButton").addEventListener("click", function() {
+        resetOptions();
+    });
+
+    // Define the loadCountsData function
+    function loadCountsData() {
+    var contentElement = document.getElementById('content');
+    contentElement.innerHTML = `
+        <div id="subtabs">
+            <button class="subtab-button" onclick="loadCountsContent('BoxPlot')">Box Plot</button>
+            <button class="subtab-button" onclick="loadCountsContent('PCA plot')">PCA plot</button>
+        </div>
+        <div id="subcontent">
+            <!-- Sub-content will be loaded here -->
+        </div>
+    `;
+}
+
+
+// Function to load content based on the selected subtab
+function loadCountsContent(subtab) {
+    var subContentElement = document.getElementById('subcontent');
+    switch (subtab) {
+        case 'BoxPlot':
+            subContentElement.innerHTML = `
+                <div class="panel">
+                    <div id="boxplot_plot"></div>
+                    <button id='create_plot'>Create Box Plot</button>
+                </div>
+                <div id="info-panel" class="panel" style="display: none;">
+                    <!-- Information will be displayed here -->
+                </div>
+            `;
+            break;
+        case 'PCA plot':
+            subContentElement.innerHTML = `
+                <div class="panel">
+                    <h2>PCA Image</h2>
+                    <img src="https://bioed.bu.edu/images/students_24/abhyuday/pca_plot.jpeg" alt="PCA Image" style="max-width: 100%; height: auto;">
+                </div>
+                <div class="panel">
+                    <h2>PCA Information</h2>
+                    <p>This is where you can provide information about PCA.</p>
+                </div>
+            `;
+            break;
+    }
+}
+
+// Event delegation setup for Box Plot creation
+document.addEventListener('DOMContentLoaded', function() {
+    var subContentElement = document.getElementById('subcontent');
+    subContentElement.addEventListener('click', function(event) {
+        if (event.target && event.target.id === 'create_plot') {
+            createBoxPlot();
+        }
+    });
+});
+
+function createBoxPlot() {
+    fetch('https://bioed.bu.edu/cgi-bin/students_24/arshiyas/counts_team_11.py', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `selector=BoxPlot`
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        } else {
+            return response.json();
+        }
+    })
+    .then(data => {
+        if (data.error) {
+            document.getElementById('boxplot_plot').innerHTML = 'There was an error processing the data.';
+        } else {
+            drawBoxPlot(data, 'boxplot_plot');
+        }
+    })
+    .catch(error => {
+        alert('Error in AJAX request.');
+        console.error('Error:', error);
+    });
+}
+
+// You can keep the drawBoxPlot function as is.
+
+function drawBoxPlot(response, containerId) {
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(function() {
+        var chartData = new google.visualization.DataTable();
+
+        // First add the column for 'Genes'
+        chartData.addColumn('string', response.columns[0]);
+
+        // Then add columns for each sample as returned by the server
+        response.columns.slice(1).forEach(function(column) {
+            chartData.addColumn('number', column);
+        });
+
+        // Add the data rows
+        response.data.forEach(function(row) {
+            chartData.addRow(row);
+        });
+
+        var options = {
+            title: 'Box Plot of Gene Expression',
+            legend: { position: 'none' },
+            hAxis: { title: 'Gene' },
+            vAxis: { title: 'Expression Level' },
+            boxWidth: 1,
+            lineWidth: 2
+        };
+
+        var chart = new google.visualization.CandlestickChart(document.getElementById(containerId));
+        chart.draw(chartData, options);
+    });
+}
+
+// Call loadCountsContent function with the desired subtab to load the content
+loadCountsContent('BoxPlot');
+
+    function loadGenes() {
+  var contentElement = document.getElementById('content');
+  contentElement.innerHTML = `
+    <div id="subtabs">
+      <button class="subtab-button" onclick="loadGenesContent('Deseq2')">DESeq2</button>
+      <button class="subtab-button" onclick="loadGenesContent('Edger')">EdgeR</button>
+    </div>
+     <div id="subcontent">
+            <!-- Sub-content will be loaded here -->
+     </div>
+      `;
+}
+
+function loadGenesContent(subtab) {
+  var subContentElement = document.getElementById('subcontent');
+        switch (subtab) {
+            case 'Edger':
+                subContentElement.innerHTML = `
+                    <div class="panel">
+                        <h2>Choose Pathway for more Information</h2>
+                        <label for="edgeR_slider">EdgeR p-value:</label><br>
+                        <input type="range" class="slider" min="0" max="1" value="0.05" step="0.01" id="edgeR_slider" name="edgeR_slider"><br>
+                        <span id="edgeR_slider_value">0.05</span><br><br>
+                        <button id='eb'>Create Plot</button>
+                    </div>
+                    <div id="edgeR_plot" style="width: 800px; height: 580px;"></div>
+                        
+                `;
+                attachEventListenersEdgeR();
+                break;
+            case 'Deseq2':
+                subContentElement.innerHTML = `
+                    <div class="panel">
+                        <h2>Differential Genes Analysis Plot</h2>
+                        <label for="DESeq2_slider">DESeq2 p-value:</label><br>
+                        <input type="range" class="slider" min="0" max="1" value="0.05" step="0.01" id="DESeq2_slider" name="DESeq2_slider"><br>
+                        <span id="DESeq2_slider_value">0.05</span><br><br>
+                        <button id='db'>Create Plot</button>
+                    </div>
+                    <div id="DESeq2_plot" style="width: 800px; height: 580px;"></div>
+                
+                    
+                `;
+                attachEventListenersDESeq2();
+                break;
+        }
+    }
+    
+    function attachEventListenersEdgeR() {
+        $('#edgeR_slider').on('input', function() {
+            $('#edgeR_slider_value').text($(this).val());
+        });
+
+        $('#eb').click(function() {
+            var edgeRValue = $('#edgeR_slider').val();
+            $.ajax({
+                type: 'POST',
+                url: 'https://bioed.bu.edu/cgi-bin/students_24/abhyuday/de.py', // Python script for EdgeR data
+                data: { edgeR_slider: edgeRValue, selector: 'Edger' },
+                success: function(data) {
+                    console.log('EdgeR data received:', data);
+                    if (data.error) {
+                        $('#edgeR_plot').html('There was no data for the given p-value threshold ' + edgeRValue);
+                    } else {
+                        drawScatterPlot(data, 'edgeR_plot');
+                    }
+                },
+                error: function() {
+                    alert('Error in AJAX request.');
+                }
+            });
+        });
+    }
+
+    function attachEventListenersDESeq2() {
+        $('#DESeq2_slider').on('input', function() {
+            $('#DESeq2_slider_value').text($(this).val());
+        });
+
+        $('#db').click(function() {
+            var DESeq2Value = $('#DESeq2_slider').val();
+            $.ajax({
+                type: 'POST',
+                url: 'https://bioed.bu.edu/cgi-bin/students_24/abhyuday/de.py', // Python script for DESeq2 data
+                data: { DESeq2_slider: DESeq2Value, selector: 'Deseq2'},
+                success: function(data) {
+                    console.log('DESeq2 data received:', data);
+                    if (data.error) {
+                        $('#DESeq2_plot').html('There was no data for the given p-value threshold ' + DESeq2Value);
+                    } else {
+                        drawScatterPlot(data, 'DESeq2_plot');
+                    }
+                },
+                error: function() {
+                    alert('Error in AJAX request.');
+                }
+            });
+        });
+    }
+
+
+    // Function to draw scatter plot
+    function drawScatterPlot(data, containerId) {
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(function() {
+            var chartData = new google.visualization.DataTable();
+            chartData.addColumn('string', 'Pathway');
+            chartData.addColumn('number', 'Value');
+            data.forEach(function(item) {
+                chartData.addRow([item[0], item[1]]);
+            });
+            var options = {
+    title: 'Volcano Plot',
+    hAxis: { title: 'Pathway' },
+    vAxis: {
+        title: 'Value',
+        viewWindow: {
+            min: -2,
+            max: 2
+        }
+    },
+    legend: 'none',
+    tooltip: { isHtml: true },
+    pointSize: 1,
+    series: {
+        0: { color: 'blue' },
+        1: { color: 'red' }
+    }
+};
+var container = document.getElementById(containerId);
+        container.style.width = '100%'; // Adjust as needed
+        container.style.height = '600px'; // Adjust as needed
+
+            var chart = new google.visualization.ScatterChart(document.getElementById(containerId));
+            chart.draw(chartData, options);
+        });
+    }
+
+    function loadGSEA() {
+    var contentElement = document.getElementById('content');
+    contentElement.innerHTML = `
+        <div id="subtabs">
+            <button class="subtab-button" onclick="loadGSEAContent('subtab1')">Top Pathways</button>
+            <button class="subtab-button" onclick="loadGSEAContent('subtab2')">Gsea plot</button>
+        </div>
+        <div id="subcontent">
+            <!-- Sub-content will be loaded here -->
+        </div>
+        <div id="gsea-data-container" style="display: none;"></div>
+    `;
+}
+
+
+function loadWGCNA() {
+    var contentElement = document.getElementById('content');
+    contentElement.innerHTML = `
+        <div class="panel">
+            <h2 class="heading">Plot Heatmap Opioid-Control vs. Trait</h2>
+            <div id="heatmap-container"></div>
+            <form id="heatmap-form">
+                <label for="trait">Select Trait:</label>
+                <div class="regulation-options">
+                    <div class="radio-options">
+                        <input type="radio" id="opioidType" name="trait" value="opioidType">
+                        <label for="opioidType">Opioid Type</label>
+                        <input type="radio" id="ethnicity" name="trait" value="ethnicity">
+                        <label for="ethnicity">Ethnicity</label>
+                        <input type="radio" id="gender" name="trait" value="gender">
+                        <label for="gender">Gender</label>
+                    </div>
+                </div>
+                <button type="submit" class="panel-button">Plot Heatmap</button>
+            </form>
+        </div>`;
+    
+    var form = document.getElementById('heatmap-form');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        updateHeatmapImage();
+    });
+}
+
+function updateHeatmapImage() {
+    var heatmapContainer = document.getElementById('heatmap-container');
+    var selectedRadio = document.querySelector('input[name="trait"]:checked');
+
+    if (!selectedRadio) {
+        heatmapContainer.innerHTML = '<p>Please select a trait.</p>';
+        return; // Exit the function if no radio button is selected
+    }
+
+    var imageUrl;
+
+    switch (selectedRadio.value) {
+        case 'opioidType':
+            imageUrl = "https://bioed.bu.edu/images/students_24/abhyuday/Opioid_Type.jpeg";
+            break;
+        case 'ethnicity':
+            imageUrl = "https://bioed.bu.edu/images/students_24/abhyuday/Ethnicity_Plot.jpeg";
+            break;
+        case 'gender':
+            imageUrl = "https://bioed.bu.edu/images/students_24/abhyuday/gender_plot.jpeg";
+            break;
+        default:
+            // Default to some image if no radio button is selected
+            imageUrl = 'default.jpg';
+            break;
+    }
+
+    heatmapContainer.innerHTML = '<img src="' + imageUrl + '" alt="Heatmap Image">';
+}
+
+
+
+
+function loadGSEAContent(subtab) {
+    var subContentElement = document.getElementById('subcontent');
+    switch (subtab) {
+        case 'subtab1':
+            subContentElement.innerHTML = `
+                <div class="panel">
+                    <h2>Choose Pathway for more Information</h2>
+                    <form id="gsea-form">
+                        <div>
+                            <input type="radio" class= "regulation-options" id="upregulated" name="regulation" value="upregulated" onchange="showDropdown()">
+                            <label for="upregulated">Upregulated</label>
+                        </div>
+                        <div>
+                            <input type="radio" class= "regulation-options" id="downregulated" name="regulation" value="downregulated" onchange="showDropdown()">
+                            <label for="downregulated">Downregulated</label>
+                        </div>
+                        <div id="dropdown-container" style="display: none;">
+                            <label for="dropdown">Select an option:</label>
+                            <select id="dropdown" onchange="showGSEAData()">
+                                <option value="">--Select an option--</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div id="info-panel" class="panel" style="display: none;">
+                    <!-- Information will be displayed here -->
+                </div>
+            `;
+            break;
+        case 'subtab2':
+            subContentElement.innerHTML = `
+                    <div class="panel">
+                            <h2>Gene Set Enrichment Analysis Plot</h2>
+                            <label for="miRNA_slider">Adjust Number:</label><br>
+                            <input type="range" class="slider" min="1" max="100" value="2" step="1" id="miRNA_slider" name="miRNA_slider"><br>
+                            <span id="sliderValue2" onclick="getGSEAPlot()"></span><br><br>
+                            <div id="plot_gsea"></div>
+                            <button id="histogramBtn2" class="panel button">Get GSEA Plot</button><br><br>
+                        </div>
+                        <div id="histogramChart2" style="width: 800px; height: 580px;"></div>
+                    
+                
+            `;
+            attachEventListeners2();
+            break;
+    }
+}
+
+
+    function attachEventListeners2() {
+        $('#miRNA_slider').on('input', function() {
+            $('#sliderValue2').text($(this).val());
+        });
+
+        $('#histogramBtn2').click(function() {
+            var miRNAValue = $('#miRNA_slider').val();
+            $.ajax({
+                type: 'POST',
+                url: 'https://bioed.bu.edu/cgi-bin/students_24/abhyuday/Gsea_func.py', // Python script for histogram data
+                data: { miRNA_name: miRNAValue },
+                success: function(data) {
+                    console.log('Histogram data received:', data);
+                    if (data.error) {
+                        $('#histogramChart2').html('There was no data for the miRNA' + miRNAValue);
+                    } else {
+                        drawChart(data);
+                    }
+                },
+                error: function() {
+                    alert('Error in AJAX request.');
+                }
+            });
+        });
+    }
+
+    // Function to draw chart
+    function drawChart(data) {
+        // Load Google Charts library
+        google.charts.load('current', {'packages':['corechart']});
+        // Set callback function when Google Charts is loaded
+        google.charts.setOnLoadCallback(function() {
+            // Create a DataTable object
+            var chartData = new google.visualization.DataTable();
+            chartData.addColumn('string', 'Pathway');
+            chartData.addColumn('number', 'NES');
+            data.forEach(function(item) {
+                chartData.addRow([item[0], item[1]]);
+            });
+            // Set chart options
+            var options = {
+                title: 'GSEA Plot',
+                legend: { position: 'none' }, // Hide legend
+                hAxis: { title: 'Pathway' },
+                vAxis: { title: 'Normalized Enrichment Score (NES)' },
+                colors: ['blue', 'grey'] // Color bars above zero as blue and below zero as grey
+            };
+            // Create and draw the chart as a BarChart
+            var chart = new google.visualization.BarChart(document.getElementById('histogramChart2'));
+            chart.draw(chartData, options);
+        });
+    }
+  
+
+// 
+
+function showDropdown() {
+    var dropdownContainer = document.getElementById('dropdown-container');
+    var dropdown = document.getElementById('dropdown');
+    var upregulated = document.getElementById('upregulated').checked;
+    var downregulated = document.getElementById('downregulated').checked;
+
+    // Clear existing options
+    dropdown.innerHTML = '<option value="">--Select an option--</option>';
+
+    if (upregulated) {
+        dropdownContainer.style.display = 'block';
+        // Add options for upregulated pathways
+        var upregulatedPathways = [
+            'ABBUD_LIF_SIGNALING_1_DN',
+            'ABBUD_LIF_SIGNALING_1_UP',
+            'ABBUD_LIF_SIGNALING_2_UP',
+            'ABE_INNER_EAR',
+            'ABE_VEGFA_TARGETS',
+            'ABE_VEGFA_TARGETS_2HR',
+            'ABE_VEGFA_TARGETS_30MIN',
+            'ABRAHAM_ALPC_VS_MULTIPLE_MYELOMA_DN',
+            'ABRAHAM_ALPC_VS_MULTIPLE_MYELOMA_UP'
+        ];
+
+        upregulatedPathways.forEach(function(pathway) {
+            var option = document.createElement('option');
+            option.value = pathway;
+            option.text = pathway;
+            dropdown.options.add(option);
+        });
+    } else if (downregulated) {
+        dropdownContainer.style.display = 'block';
+        // Add options for downregulated pathways
+        var downregulatedPathways = [
+            'ZIRN_TRETINOIN_RESPONSE_WT1_DN',
+            'ZIRN_TRETINOIN_RESPONSE_WT1_UP',
+            'ZWANG_CLASS_1_TRANSIENTLY_INDUCED_BY_EGF',
+            'ZWANG_CLASS_2_TRANSIENTLY_INDUCED_BY_EGF',
+            'ZWANG_CLASS_3_TRANSIENTLY_INDUCED_BY_EGF',
+            'ZWANG_DOWN_BY_2ND_EGF_PULSE',
+            'ZWANG_EGF_INTERVAL_DN',
+            'ZWANG_EGF_INTERVAL_UP',
+            'ZWANG_EGF_PERSISTENTLY_DN',
+            'ZWANG_EGF_PERSISTENTLY_UP'
+        ];
+
+        downregulatedPathways.forEach(function(pathway) {
+            var option = document.createElement('option');
+            option.value = pathway;
+            option.text = pathway;
+            dropdown.options.add(option);
+        });
+    } else {
+        dropdownContainer.style.display = 'none';
+    }
+}
+
+// Temp function
+function showGSEAData() {
+    var dropdown = document.getElementById('dropdown');
+    var selectedOption = dropdown.value;
+    var infoPanel = document.getElementById('info-panel'); // Info panel element
+
+    // Clear existing content in the info panel
+    infoPanel.innerHTML = '';
+
+    // Check if "ABE_INNER_EAR" pathway is selected
+    if (selectedOption === 'ABE_INNER_EAR') {
+        // Create elements to display the information for ABE_INNER_EAR pathway
+        var heading = document.createElement('h2');
+        heading.textContent = 'ABE_INNER_EAR Pathway Information';
+
+        var geneSetSize = document.createElement('p');
+        geneSetSize.textContent = 'Gene Set Size: 140';
+
+        var genesExpressed = document.createElement('p');
+        genesExpressed.textContent = 'Genes Expressed: 28';
+
+        var paragraph = document.createElement('p');
+        paragraph.textContent = 'Through cDNA microarray analysis of gene expression in human cochlea and vestibule, we detected strong expression of mu-crystallin (CRYM; also known as NADP-regulated thyroid hormone-binding protein) only in these inner-ear tissues. In a subsequent search for mutations of CRYM, among 192 patients with nonsyndromic deafness, we identified two mutations at the C-terminus; one was a de novo change (X315Y) in a patient with unaffected parents, and the other was a missense mutation (K314T) that segregated dominantly in the proband\'s family. When the mutated proteins were expressed in COS-7 cells, their subcellular localizations were different from that of the normal protein: the X315Y mutant showed vacuolated distribution in the cytoplasm, and the K314T mutant localized in perinuclear areas, whereas normal protein was distributed homogeneously in the cytoplasm. Aberrant intracellular localization of the mutated proteins might cause dysfunction of the CRYM product and result in hearing impairment. In situ hybridization analysis using mouse tissues indicated its expression in the lateral region of the spiral ligament and the fibrocytes of the spiral limbus, implying its possible involvement in the potassium-ion recycling system. Our results strongly implicate CRYM in normal auditory function and identify it as one of the genes that can be responsible for nonsyndromic deafness.';
+
+        // Append elements to the info panel
+        infoPanel.appendChild(heading);
+        infoPanel.appendChild(geneSetSize);
+        infoPanel.appendChild(genesExpressed);
+        infoPanel.appendChild(paragraph);
+
+        // Show the info panel
+        infoPanel.style.display = 'block';
+    } 
+    // Check if "ABBUD_LIF_SIGNALING_1_UP" pathway is selected
+    else if (selectedOption === 'ABBUD_LIF_SIGNALING_1_UP') {
+        // Create elements to display the information for ABBUD_LIF_SIGNALING_1_UP pathway
+        var heading = document.createElement('h2');
+        heading.textContent = 'ABBUD_LIF_SIGNALING_1_UP Pathway Information';
+
+        var geneSetSize = document.createElement('p');
+        geneSetSize.textContent = 'Gene Set Size: 130';
+
+        var genesExpressed = document.createElement('p');
+        genesExpressed.textContent = 'Genes Expressed: 23';
+
+        var paragraph = document.createElement('p');
+        paragraph.textContent = 'Leukemia inhibitory factor (LIF) mediates the hypothalamo-pituitary-adrenal stress response. Transgenic mice overexpressing LIF in the developing pituitary have altered pituitary differentiation with expansion of corticotropes, maintenance of Rathke\'s cleft cysts, and suppression of all other pituitary cell types. Affymetrix GeneChips were used to identify modulators of LIF effects in corticotrope (AtT-20) and somatolactotrope (GH(3)) cells. In addition to genes known to respond to LIF in corticotrope cells [e.g. suppressor of cytokine signaling-3 (SOCS-3), signal transducer and activator of transcription-3, SH2 domain-containing tyrosine phosphatase-1, and proopiomelanocortin (POMC)], corticotrope-specific changes were also observed for genes involved in glycolysis and gluconeogenesis, transcription factors, signaling molecules, and expressed sequence tags. Two transcription factors identified, CCAAT/enhancer-binding protein beta (C/EBPbeta) and glial cell-derived neurotrophic factor (GDNF)-inducible factor (GIF), dose-dependently induced expression of the rat POMC promoter when overexpressed in AtT-20 cells. LIF further induced POMC transcription with C/EBPbeta, but not with GIF. C/EBPbeta also induced expression of the SOCS-3 promoter that was further enhanced by cotreatment with LIF. However, GIF did not affect SOCS-3 expression. These results indicate that C/EBPbeta and GIF are downstream effectors of LIF corticotrope action. LIF also stimulates the expression of inhibitors of its actions, such as SOCS-3 and SH2 domain-containing tyrosine phosphatase-1. alpha(2)-HS-glycoprotein (AHSG)/fetuin, a secreted protein that antagonizes bone TGFbeta/bone morphogenic protein signaling, was induced by LIF in a signal transducer and activator of transcription-3-dependent fashion. Pretreatment with AHSG/fetuin blocked LIF-induced expression of the POMC promoter independently of SOCS-3. Thus, using GeneChips, C/EBPbeta and GIF have been identified as novel mediators and AHSG/fetuin as an inhibitor of LIF action in corticotropes.';
+
+        // Append elements to the info panel
+        infoPanel.appendChild(heading);
+        infoPanel.appendChild(geneSetSize);
+        infoPanel.appendChild(genesExpressed);
+        infoPanel.appendChild(paragraph);
+
+        // Show the info panel
+        infoPanel.style.display = 'block';
+    }
+    else if (selectedOption === 'ABBUD_LIF_SIGNALING_1_DN') {
+        // Create elements to display the information for ABBUD_LIF_SIGNALING_1_UP pathway
+        var heading = document.createElement('h2');
+        heading.textContent = 'ABBUD_LIF_SIGNALING_1_DN Pathway Information';
+
+        var geneSetSize = document.createElement('p');
+        geneSetSize.textContent = 'Gene Set Size: 130';
+
+        var genesExpressed = document.createElement('p');
+        genesExpressed.textContent = 'Genes Expressed: 19';
+
+        var paragraph = document.createElement('p');
+        paragraph.textContent = 'Leukemia inhibitory factor (LIF) mediates the hypothalamo-pituitary-adrenal stress response. Transgenic mice overexpressing LIF in the developing pituitary have altered pituitary differentiation with expansion of corticotropes, maintenance of Rathke\'s cleft cysts, and suppression of all other pituitary cell types. Affymetrix GeneChips were used to identify modulators of LIF effects in corticotrope (AtT-20) and somatolactotrope (GH(3)) cells. In addition to genes known to respond to LIF in corticotrope cells [e.g. suppressor of cytokine signaling-3 (SOCS-3), signal transducer and activator of transcription-3, SH2 domain-containing tyrosine phosphatase-1, and proopiomelanocortin (POMC)], corticotrope-specific changes were also observed for genes involved in glycolysis and gluconeogenesis, transcription factors, signaling molecules, and expressed sequence tags. Two transcription factors identified, CCAAT/enhancer-binding protein beta (C/EBPbeta) and glial cell-derived neurotrophic factor (GDNF)-inducible factor (GIF), dose-dependently induced expression of the rat POMC promoter when overexpressed in AtT-20 cells. LIF further induced POMC transcription with C/EBPbeta, but not with GIF. C/EBPbeta also induced expression of the SOCS-3 promoter that was further enhanced by cotreatment with LIF. However, GIF did not affect SOCS-3 expression. These results indicate that C/EBPbeta and GIF are downstream effectors of LIF corticotrope action. LIF also stimulates the expression of inhibitors of its actions, such as SOCS-3 and SH2 domain-containing tyrosine phosphatase-1. alpha(2)-HS-glycoprotein (AHSG)/fetuin, a secreted protein that antagonizes bone TGFbeta/bone morphogenic protein signaling, was induced by LIF in a signal transducer and activator of transcription-3-dependent fashion. Pretreatment with AHSG/fetuin blocked LIF-induced expression of the POMC promoter independently of SOCS-3. Thus, using GeneChips, C/EBPbeta and GIF have been identified as novel mediators and AHSG/fetuin as an inhibitor of LIF action in corticotropes.';
+
+        // Append elements to the info panel
+        infoPanel.appendChild(heading);
+        infoPanel.appendChild(geneSetSize);
+        infoPanel.appendChild(genesExpressed);
+        infoPanel.appendChild(paragraph);
+
+        // Show the info panel
+        infoPanel.style.display = 'block';
+    }
+    // Check if "ABE_VEGFA_TARGETS" pathway is selected
+else if (selectedOption === 'ABE_VEGFA_TARGETS') {
+    // Create elements to display the information for ABE_VEGFA_TARGETS pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ABE_VEGFA_TARGETS Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 230';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 57';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Leukemia inhibitory factor (LIF) mediates the hypothalamo-pituitary-adrenal stress response. Transgenic mice overexpressing LIF in the developing pituitary have altered pituitary differentiation with expansion of corticotropes, maintenance of Rathke\'s cleft cysts, and suppression of all other pituitary cell types. Affymetrix GeneChips were used to identify modulators of LIF effects in corticotrope (AtT-20) and somatolactotrope (GH(3)) cells. In addition to genes known to respond to LIF in corticotrope cells [e.g. suppressor of cytokine signaling-3 (SOCS-3), signal transducer and activator of transcription-3, SH2 domain-containing tyrosine phosphatase-1, and proopiomelanocortin (POMC)], corticotrope-specific changes were also observed for genes involved in glycolysis and gluconeogenesis, transcription factors, signaling molecules, and expressed sequence tags. Two transcription factors identified, CCAAT/enhancer-binding protein beta (C/EBPbeta) and glial cell-derived neurotrophic factor (GDNF)-inducible factor (GIF), dose-dependently induced expression of the rat POMC promoter when overexpressed in AtT-20 cells. LIF further induced POMC transcription with C/EBPbeta, but not with GIF. C/EBPbeta also induced expression of the SOCS-3 promoter that was further enhanced by cotreatment with LIF. However, GIF did not affect SOCS-3 expression. These results indicate that C/EBPbeta and GIF are downstream effectors of LIF corticotrope action. LIF also stimulates the expression of inhibitors of its actions, such as SOCS-3 and SH2 domain-containing tyrosine phosphatase-1. alpha(2)-HS-glycoprotein (AHSG)/fetuin, a secreted protein that antagonizes bone TGFbeta/bone morphogenic protein signaling, was induced by LIF in a signal transducer and activator of transcription-3-dependent fashion. Pretreatment with AHSG/fetuin blocked LIF-induced expression of the POMC promoter independently of SOCS-3. Thus, using GeneChips, C/EBPbeta and GIF have been identified as novel mediators and AHSG/fetuin as an inhibitor of LIF action in corticotropes.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+// Check if "ABRAHAM_ALPC_VS_MULTIPLE_MYELOMA_DN" pathway is selected
+else if (selectedOption === 'ABRAHAM_ALPC_VS_MULTIPLE_MYELOMA_DN') {
+    // Create elements to display the information for ABRAHAM_ALPC_VS_MULTIPLE_MYELOMA_DN pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ABRAHAM_ALPC_VS_MULTIPLE_MYELOMA_DN Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 140';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 12';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Immunoglobulin light chain amyloidosis (AL) is characterized by a clonal expansion of plasma cells within the bone marrow. Gene expression analysis was used to identify a unique molecular profile for AL using enriched plasma cells (CD138+) from the bone marrow of 24 patients with AL and 28 patients with multiple myeloma (MM) and 6 healthy controls. Class prediction analysis (PAM) revealed a subset of 12 genes, which included TNFRSF7 (CD27), SDF-1, and PSMA2, that distinguished between these 2 groups with an estimated and observed accuracy of classification of 92%. This model was validated with an independent dataset of 11 patients with AL and 12 patients with MM with 87% accuracy. Differential expression for the most discriminant genes in the 12-gene subset was validated using quantitative real-time polymerase chain reaction and protein expression analysis, which upheld the observations from the micro-array expression data. Functional analyses using a novel network mapping software revealed a number of potentially significant pathways that were dysregulated in patients with AL, with those regulating proliferation, apoptosis, cell signaling, chemotaxis, and migration being substantially represented. This study provides new insight into the molecular profile of clonal plasma cells and its functional relevance in the pathogenesis of light chain amyloidosis.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+// Check if "ZIRN_TRETINOIN_RESPONSE_WT1_DN" pathway is selected
+else if (selectedOption === 'ZIRN_TRETINOIN_RESPONSE_WT1_DN') {
+    // Create elements to display the information for ZIRN_TRETINOIN_RESPONSE_WT1_DN pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ZIRN_TRETINOIN_RESPONSE_WT1_DN Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 150';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 33';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Wilms tumor is one of the most frequent neoplasias in children. Our previous microarray screening in a large series of Wilms tumors revealed several candidate genes that are deregulated in advanced tumors and are part of the retinoic acid signaling pathway. To investigate whether retinoic acid could be employed as a novel therapeutic agent in these tumors, we treated cultured Wilms tumor cells with different concentrations of all-trans retinoic acid (ATRA) and assessed gene expression changes by real-time RT-PCR as well as microarray analysis. Several genes like RARRES1, RARRES3, CTGF, CKS2, CCNA2, IGFBP3, UBE2C, CCL2 or ITM2B that were previously found to be deregulated in advanced tumors exhibited opposite expression changes after ATRA treatment. In addition to enhanced retinoid signaling, the transforming growth factor-beta (TGFbeta) pathway was strongly activated by ATRA treatment of Wilms tumor cells. Both the retinoic acid and the TGFbeta pathway mediate inhibition of cell growth. These findings represent the first molecular evidence of a potential benefit from ATRA treatment in Wilms tumors.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+// Check if "ZIRN_TRETINOIN_RESPONSE_WT1_UP" pathway is selected
+else if (selectedOption === 'ZIRN_TRETINOIN_RESPONSE_WT1_UP') {
+    // Create elements to display the information for ZIRN_TRETINOIN_RESPONSE_WT1_UP pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ZIRN_TRETINOIN_RESPONSE_WT1_UP Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 200';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 10';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Wilms tumor is one of the most frequent neoplasias in children. Our previous microarray screening in a large series of Wilms tumors revealed several candidate genes that are deregulated in advanced tumors and are part of the retinoic acid signaling pathway. To investigate whether retinoic acid could be employed as a novel therapeutic agent in these tumors, we treated cultured Wilms tumor cells with different concentrations of all-trans retinoic acid (ATRA) and assessed gene expression changes by real-time RT-PCR as well as microarray analysis. Several genes like RARRES1, RARRES3, CTGF, CKS2, CCNA2, IGFBP3, UBE2C, CCL2 or ITM2B that were previously found to be deregulated in advanced tumors exhibited opposite expression changes after ATRA treatment. In addition to enhanced retinoid signaling, the transforming growth factor-beta (TGFbeta) pathway was strongly activated by ATRA treatment of Wilms tumor cells. Both the retinoic acid and the TGFbeta pathway mediate inhibition of cell growth. These findings represent the first molecular evidence of a potential benefit from ATRA treatment in Wilms tumors.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+// Check if "ZWANG_CLASS_1_TRANSIENTLY_INDUCED_BY_EGF" pathway is selected
+else if (selectedOption === 'ZWANG_CLASS_1_TRANSIENTLY_INDUCED_BY_EGF') {
+    // Create elements to display the information for ZWANG_CLASS_1_TRANSIENTLY_INDUCED_BY_EGF pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ZWANG_CLASS_1_TRANSIENTLY_INDUCED_BY_EGF Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 250';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 14';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Normal cells require continuous exposure to growth factors in order to cross a restriction point and commit to cell-cycle progression. This can be replaced by two short, appropriately spaced pulses of growth factors, where the first pulse primes a process, which is completed by the second pulse, and enables restriction point crossing. Through integration of comprehensive proteomic and transcriptomic analyses of each pulse, we identified three processes that regulate restriction point crossing: (1) The first pulse induces essential metabolic enzymes and activates p53-dependent restraining processes. (2) The second pulse eliminates, via the PI3K/AKT pathway, the suppressive action of p53, as well as (3) sets an ERK-EGR1 threshold mechanism, which digitizes graded external signals into an all-or-none decision obligatory for S phase entry. Together, our findings uncover two gating mechanisms, which ensure that cells ignore fortuitous growth factors and undergo proliferation only in response to consistent mitogenic signals.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+// Check if "ZWANG_CLASS_2_TRANSIENTLY_INDUCED_BY_EGF" pathway is selected
+else if (selectedOption === 'ZWANG_CLASS_2_TRANSIENTLY_INDUCED_BY_EGF') {
+    // Create elements to display the information for ZWANG_CLASS_2_TRANSIENTLY_INDUCED_BY_EGF pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ZWANG_CLASS_2_TRANSIENTLY_INDUCED_BY_EGF Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 30';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 7';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Normal cells require continuous exposure to growth factors in order to cross a restriction point and commit to cell-cycle progression. This can be replaced by two short, appropriately spaced pulses of growth factors, where the first pulse primes a process, which is completed by the second pulse, and enables restriction point crossing. Through integration of comprehensive proteomic and transcriptomic analyses of each pulse, we identified three processes that regulate restriction point crossing: (1) The first pulse induces essential metabolic enzymes and activates p53-dependent restraining processes. (2) The second pulse eliminates, via the PI3K/AKT pathway, the suppressive action of p53, as well as (3) sets an ERK-EGR1 threshold mechanism, which digitizes graded external signals into an all-or-none decision obligatory for S phase entry. Together, our findings uncover two gating mechanisms, which ensure that cells ignore fortuitous growth factors and undergo proliferation only in response to consistent mitogenic signals.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+// Check if "ZWANG_CLASS_3_TRANSIENTLY_INDUCED_BY_EGF" pathway is selected
+else if (selectedOption === 'ZWANG_CLASS_3_TRANSIENTLY_INDUCED_BY_EGF') {
+    // Create elements to display the information for ZWANG_CLASS_3_TRANSIENTLY_INDUCED_BY_EGF pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ZWANG_CLASS_3_TRANSIENTLY_INDUCED_BY_EGF Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 144';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 16';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Normal cells require continuous exposure to growth factors in order to cross a restriction point and commit to cell-cycle progression. This can be replaced by two short, appropriately spaced pulses of growth factors, where the first pulse primes a process, which is completed by the second pulse, and enables restriction point crossing. Through integration of comprehensive proteomic and transcriptomic analyses of each pulse, we identified three processes that regulate restriction point crossing: (1) The first pulse induces essential metabolic enzymes and activates p53-dependent restraining processes. (2) The second pulse eliminates, via the PI3K/AKT pathway, the suppressive action of p53, as well as (3) sets an ERK-EGR1 threshold mechanism, which digitizes graded external signals into an all-or-none decision obligatory for S phase entry. Together, our findings uncover two gating mechanisms, which ensure that cells ignore fortuitous growth factors and undergo proliferation only in response to consistent mitogenic signals.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+
+// Check if "ZWANG_DOWN_BY_2ND_EGF_PULSE" pathway is selected
+else if (selectedOption === 'ZWANG_DOWN_BY_2ND_EGF_PULSE') {
+    // Create elements to display the information for ZWANG_DOWN_BY_2ND_EGF_PULSE pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ZWANG_DOWN_BY_2ND_EGF_PULSE Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 77';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 19';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Normal cells require continuous exposure to growth factors in order to cross a restriction point and commit to cell-cycle progression. This can be replaced by two short, appropriately spaced pulses of growth factors, where the first pulse primes a process, which is completed by the second pulse, and enables restriction point crossing. Through integration of comprehensive proteomic and transcriptomic analyses of each pulse, we identified three processes that regulate restriction point crossing: (1) The first pulse induces essential metabolic enzymes and activates p53-dependent restraining processes. (2) The second pulse eliminates, via the PI3K/AKT pathway, the suppressive action of p53, as well as (3) sets an ERK-EGR1 threshold mechanism, which digitizes graded external signals into an all-or-none decision obligatory for S phase entry. Together, our findings uncover two gating mechanisms, which ensure that cells ignore fortuitous growth factors and undergo proliferation only in response to consistent mitogenic signals.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+
+// Check if "ZWANG_EGF_INTERVAL_DN" pathway is selected
+else if (selectedOption === 'ZWANG_EGF_INTERVAL_DN') {
+    // Create elements to display the information for ZWANG_EGF_INTERVAL_DN pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ZWANG_EGF_INTERVAL_DN Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 40';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 9';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Normal cells require continuous exposure to growth factors in order to cross a restriction point and commit to cell-cycle progression. This can be replaced by two short, appropriately spaced pulses of growth factors, where the first pulse primes a process, which is completed by the second pulse, and enables restriction point crossing. Through integration of comprehensive proteomic and transcriptomic analyses of each pulse, we identified three processes that regulate restriction point crossing: (1) The first pulse induces essential metabolic enzymes and activates p53-dependent restraining processes. (2) The second pulse eliminates, via the PI3K/AKT pathway, the suppressive action of p53, as well as (3) sets an ERK-EGR1 threshold mechanism, which digitizes graded external signals into an all-or-none decision obligatory for S phase entry. Together, our findings uncover two gating mechanisms, which ensure that cells ignore fortuitous growth factors and undergo proliferation only in response to consistent mitogenic signals.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+
+// Check if "ZWANG_EGF_INTERVAL_UP" pathway is selected
+else if (selectedOption === 'ZWANG_EGF_INTERVAL_UP') {
+    // Create elements to display the information for ZWANG_EGF_INTERVAL_UP pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ZWANG_EGF_INTERVAL_UP Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 68';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 5';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Normal cells require continuous exposure to growth factors in order to cross a restriction point and commit to cell-cycle progression. This can be replaced by two short, appropriately spaced pulses of growth factors, where the first pulse primes a process, which is completed by the second pulse, and enables restriction point crossing. Through integration of comprehensive proteomic and transcriptomic analyses of each pulse, we identified three processes that regulate restriction point crossing: (1) The first pulse induces essential metabolic enzymes and activates p53-dependent restraining processes. (2) The second pulse eliminates, via the PI3K/AKT pathway, the suppressive action of p53, as well as (3) sets an ERK-EGR1 threshold mechanism, which digitizes graded external signals into an all-or-none decision obligatory for S phase entry. Together, our findings uncover two gating mechanisms, which ensure that cells ignore fortuitous growth factors and undergo proliferation only in response to consistent mitogenic signals.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+
+// Check if "ZWANG_EGF_PERSISTENTLY_DN" pathway is selected
+else if (selectedOption === 'ZWANG_EGF_PERSISTENTLY_DN') {
+    // Create elements to display the information for ZWANG_EGF_PERSISTENTLY_DN pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ZWANG_EGF_PERSISTENTLY_DN Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 44';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 13';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Normal cells require continuous exposure to growth factors in order to cross a restriction point and commit to cell-cycle progression. This can be replaced by two short, appropriately spaced pulses of growth factors, where the first pulse primes a process, which is completed by the second pulse, and enables restriction point crossing. Through integration of comprehensive proteomic and transcriptomic analyses of each pulse, we identified three processes that regulate restriction point crossing: (1) The first pulse induces essential metabolic enzymes and activates p53-dependent restraining processes. (2) The second pulse eliminates, via the PI3K/AKT pathway, the suppressive action of p53, as well as (3) sets an ERK-EGR1 threshold mechanism, which digitizes graded external signals into an all-or-none decision obligatory for S phase entry. Together, our findings uncover two gating mechanisms, which ensure that cells ignore fortuitous growth factors and undergo proliferation only in response to consistent mitogenic signals.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+// Check if "ZWANG_EGF_PERSISTENTLY_UP" pathway is selected
+else if (selectedOption === 'ZWANG_EGF_PERSISTENTLY_UP') {
+    // Create elements to display the information for ZWANG_EGF_PERSISTENTLY_UP pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ZWANG_EGF_PERSISTENTLY_UP Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 40';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 9';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Normal cells require continuous exposure to growth factors in order to cross a restriction point and commit to cell-cycle progression. This can be replaced by two short, appropriately spaced pulses of growth factors, where the first pulse primes a process, which is completed by the second pulse, and enables restriction point crossing. Through integration of comprehensive proteomic and transcriptomic analyses of each pulse, we identified three processes that regulate restriction point crossing: (1) The first pulse induces essential metabolic enzymes and activates p53-dependent restraining processes. (2) The second pulse eliminates, via the PI3K/AKT pathway, the suppressive action of p53, as well as (3) sets an ERK-EGR1 threshold mechanism, which digitizes graded external signals into an all-or-none decision obligatory for S phase entry. Together, our findings uncover two gating mechanisms, which ensure that cells ignore fortuitous growth factors and undergo proliferation only in response to consistent mitogenic signals.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+
+
+
+
+
+
+// Check if "ABRAHAM_ALPC_VS_MULTIPLE_MYELOMA_UP" pathway is selected
+else if (selectedOption === 'ABRAHAM_ALPC_VS_MULTIPLE_MYELOMA_UP') {
+    // Create elements to display the information for ABRAHAM_ALPC_VS_MULTIPLE_MYELOMA_UP pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ABRAHAM_ALPC_VS_MULTIPLE_MYELOMA_UP Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 12';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 12';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Immunoglobulin light chain amyloidosis (AL) is characterized by a clonal expansion of plasma cells within the bone marrow. Gene expression analysis was used to identify a unique molecular profile for AL using enriched plasma cells (CD138+) from the bone marrow of 24 patients with AL and 28 patients with multiple myeloma (MM) and 6 healthy controls. Class prediction analysis (PAM) revealed a subset of 12 genes, which included TNFRSF7 (CD27), SDF-1, and PSMA2, that distinguished between these 2 groups with an estimated and observed accuracy of classification of 92%. This model was validated with an independent dataset of 11 patients with AL and 12 patients with MM with 87% accuracy. Differential expression for the most discriminant genes in the 12-gene subset was validated using quantitative real-time polymerase chain reaction and protein expression analysis, which upheld the observations from the micro-array expression data. Functional analyses using a novel network mapping software revealed a number of potentially significant pathways that were dysregulated in patients with AL, with those regulating proliferation, apoptosis, cell signaling, chemotaxis, and migration being substantially represented. This study provides new insight into the molecular profile of clonal plasma cells and its functional relevance in the pathogenesis of light chain amyloidosis.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+
+
+// Check if "ABE_VEGFA_TARGETS_30MIN" pathway is selected
+else if (selectedOption === 'ABE_VEGFA_TARGETS_30MIN') {
+    // Create elements to display the information for ABE_VEGFA_TARGETS_30MIN pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ABE_VEGFA_TARGETS_30MIN Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 139';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 53';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Vascular endothelial growth factor (VEGF) is one of the most important factors that stimulate angiogenesis and vascular permeability. To clarify the role of VEGF, we analysed a human cDNA chip containing 7267 human genes to identify genes induced by VEGF in human umbilical vein endothelial cells (HUVECs). One hundred thirty-nine cDNAs, including ninety-nine previously known and forty poorly characterized or novel sequences, were increased more than two-fold by VEGF within twenty-four hours of stimulation. Among them, only five are known to regulate angiogenesis: cyclooxygenase 2 (COX2), heparin-binding epidermal growth factor-like growth factor, early growth response 1 (EGR 1), CYR61, and angiopoietin 2. Fifty-three genes induced within the first two hours were thought to be directly induced by VEGF. Of these, Down syndrome candidate region 1 (maximum induction = 6.1-fold) was the most profoundly induced, followed by Mifl (KIAA0025; 5.5-fold), COX2 (4.7-fold), EGR 3 (3.7-fold), EGR 2 (3.2-fold), bactericidal/permeability-increasing protein (3.1-fold), and CD1B antigen, b polypeptide (3.1-fold). In addition to the genes mentioned above, there were many poorly characterized or novel genes induced by VEGF. Further analysis of these genes may aid in the elucidation of the molecular mechanisms of angiogenesis or vascular permeability stimulated by VEGF.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+
+
+// Check if "ABE_VEGFA_TARGETS_2HR" pathway is selected
+else if (selectedOption === 'ABE_VEGFA_TARGETS_2HR') {
+    // Create elements to display the information for ABE_VEGFA_TARGETS_2HR pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ABE_VEGFA_TARGETS_2HR Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 139';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 53';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'Vascular endothelial growth factor (VEGF) is one of the most important factors that stimulate angiogenesis and vascular permeability. To clarify the role of VEGF, we analysed a human cDNA chip containing 7267 human genes to identify genes induced by VEGF in human umbilical vein endothelial cells (HUVECs). One hundred thirty-nine cDNAs, including ninety-nine previously known and forty poorly characterized or novel sequences, were increased more than two-fold by VEGF within twenty-four hours of stimulation. Among them, only five are known to regulate angiogenesis: cyclooxygenase 2 (COX2), heparin-binding epidermal growth factor-like growth factor, early growth response 1 (EGR 1), CYR61, and angiopoietin 2. Fifty-three genes induced within the first two hours were thought to be directly induced by VEGF. Of these, Down syndrome candidate region 1 (maximum induction = 6.1-fold) was the most profoundly induced, followed by Mifl (KIAA0025; 5.5-fold), COX2 (4.7-fold), EGR 3 (3.7-fold), EGR 2 (3.2-fold), bactericidal/permeability-increasing protein (3.1-fold), and CD1B antigen, b polypeptide (3.1-fold). In addition to the genes mentioned above, there were many poorly characterized or novel genes induced by VEGF. Further analysis of these genes may aid in the elucidation of the molecular mechanisms of angiogenesis or vascular permeability stimulated by VEGF.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+
+
+    // Check if "ABDULRAHMAN_KIDNEY_CANCER_VHL_DN" pathway is selected
+else if (selectedOption === 'ABDULRAHMAN_KIDNEY_CANCER_VHL_DN') {
+    // Create elements to display the information for ABDULRAHMAN_KIDNEY_CANCER_VHL_DN pathway
+    var heading = document.createElement('h2');
+    heading.textContent = 'ABDULRAHMAN_KIDNEY_CANCER_VHL_DN Pathway Information';
+
+    var geneSetSize = document.createElement('p');
+    geneSetSize.textContent = 'Gene Set Size: 19';
+
+    var genesExpressed = document.createElement('p');
+    genesExpressed.textContent = 'Genes Expressed: 8';
+
+    var paragraph = document.createElement('p');
+    paragraph.textContent = 'von Hippel-Lindau (VHL) disease is a dominantly inherited family cancer syndrome characterized by the development of retinal and central nervous system haemangioblastomas, renal cell carcinoma (RCC) and phaeochromocytoma. Specific germline VHL mutations may predispose to haemangioblastomas, RCC and phaeochromocytoma to a varying extent. Although dysregulation of the hypoxia-inducible transcription factor-2 and JunB have been linked to the development of RCC and phaeochromocytoma, respectively, the precise basis for genotype-phenotype correlations in VHL disease have not been defined. To gain insights into the pathogenesis of RCC in VHL disease we compared gene expression microarray profiles in a RCC cell line expressing a Type 1 or Type 2B mutant pVHL (RCC-associated) to those of a Type 2A or 2C mutant (not associated with RCC). We identified 19 differentially expressed novel VHL target genes linked to RCC development. Eight targets were studied in detail by quantitative real-time polymerase chain reaction (three downregulated and five upregulated by wild-type VHL) and for six genes the effect of VHL inactivation was mimicked by hypoxia (but hypoxic-induction of smooth muscle alpha-actin 2 was specific for a RCC cell line). The potential role of four RCC-associated VHL target genes was assessed in vitro. NB thymosin beta (TMSNB) and proteinase-activated receptor 2 (PAR2) (both downregulated by wt pVHL) increased cell growth and motility in a RCC cell line, but aldehyde dehydrogenase (ALDH)1 and ALDH7 had no effect. These findings implicate TMSNB and PAR2 candidate oncogenes in the pathogenesis of VHL-associated RCC.';
+
+    // Append elements to the info panel
+    infoPanel.appendChild(heading);
+    infoPanel.appendChild(geneSetSize);
+    infoPanel.appendChild(genesExpressed);
+    infoPanel.appendChild(paragraph);
+
+    // Show the info panel
+    infoPanel.style.display = 'block';
+}
+ 
+    // Check if "ABBUD_LIF_SIGNALING_2_UP" pathway is selected
+    else if (selectedOption === 'ABBUD_LIF_SIGNALING_2_UP') {
+        // Create elements to display the information for ABBUD_LIF_SIGNALING_2_UP pathway
+        var heading = document.createElement('h2');
+        heading.textContent = 'ABBUD_LIF_SIGNALING_2_UP Pathway Information';
+
+        var geneSetSize = document.createElement('p');
+        geneSetSize.textContent = 'Gene Set Size: 130';
+
+        var genesExpressed = document.createElement('p');
+        genesExpressed.textContent = 'Genes Expressed: 23';
+
+        var paragraph = document.createElement('p');
+        paragraph.textContent = 'Leukemia inhibitory factor (LIF) mediates the hypothalamo-pituitary-adrenal stress response. Transgenic mice overexpressing LIF in the developing pituitary have altered pituitary differentiation with expansion of corticotropes, maintenance of Rathke\'s cleft cysts, and suppression of all other pituitary cell types. Affymetrix GeneChips were used to identify modulators of LIF effects in corticotrope (AtT-20) and somatolactotrope (GH(3)) cells. In addition to genes known to respond to LIF in corticotrope cells [e.g. suppressor of cytokine signaling-3 (SOCS-3), signal transducer and activator of transcription-3, SH2 domain-containing tyrosine phosphatase-1, and proopiomelanocortin (POMC)], corticotrope-specific changes were also observed for genes involved in glycolysis and gluconeogenesis, transcription factors, signaling molecules, and expressed sequence tags. Two transcription factors identified, CCAAT/enhancer-binding protein beta (C/EBPbeta) and glial cell-derived neurotrophic factor (GDNF)-inducible factor (GIF), dose-dependently induced expression of the rat POMC promoter when overexpressed in AtT-20 cells. LIF further induced POMC transcription with C/EBPbeta, but not with GIF. C/EBPbeta also induced expression of the SOCS-3 promoter that was further enhanced by cotreatment with LIF. However, GIF did not affect SOCS-3 expression. These results indicate that C/EBPbeta and GIF are downstream effectors of LIF corticotrope action. LIF also stimulates the expression of inhibitors of its actions, such as SOCS-3 and SH2 domain-containing tyrosine phosphatase-1. alpha(2)-HS-glycoprotein (AHSG)/fetuin, a secreted protein that antagonizes bone TGFbeta/bone morphogenic protein signaling, was induced by LIF in a signal transducer and activator of transcription-3-dependent fashion. Pretreatment with AHSG/fetuin blocked LIF-induced expression of the POMC promoter independently of SOCS-3. Thus, using GeneChips, C/EBPbeta and GIF have been identified as novel mediators and AHSG/fetuin as an inhibitor of LIF action in corticotropes.';
+
+        // Append elements to the info panel
+        infoPanel.appendChild(heading);
+        infoPanel.appendChild(geneSetSize);
+        infoPanel.appendChild(genesExpressed);
+        infoPanel.appendChild(paragraph);
+
+        // Show the info panel
+        infoPanel.style.display = 'block';
+    } else {
+        // Hide the info panel if no pathway is selected
+        infoPanel.style.display = 'none';
+    }
+}
+
+// Define showHelp to navigate to specific help content
+function showHelp(topic) {
+  loadHelpContent(); // Load the help content first
+  // After the help content is loaded, scroll to the specific part
+  setTimeout(() => {
+    document.location.hash = 'metadataSearch' + topic; // Set the browser hash to the ID, which should match the element ID in the help content
+  }, 100); // Timeout to ensure the content is loaded
+}
+
+
+// Function to load content for the 'Help' tab
+function loadHelpContent() {
+    var contentElement = document.getElementById('content');
+    contentElement.innerHTML = `
+        <h2 style="padding-left: 10px;">Help Content</h2>
+        <div id="metadataSearch">
+          <h4 style="padding-left: 20px;">Metadata Search</h4>
+          <ul>
+            <li><strong>Sample ID:</strong> Corresponds to the unique identifier for each sample or subject observed during the study. This ID is critical for tracking specific samples without revealing any personal information of the subjects.</li>
+        </ul>
+        <h4 style="padding-left: 20px;">Batch</h4>
+        <ul>
+            <li><strong>Batches:</strong> The study was conducted in separate timelines. These batches represent distinct phases or groups during which the data was collected, allowing for temporal comparisons in data analysis.</li>
+        </ul>
+        <h4 style="padding-left: 20px;">Opioid Control</h4>
+        <ul>
+            <li><strong>Opioid Control:</strong> Indicates whether the subject was exposed to opioids, was a control (not exposed), or received NTX (Naltrexone) during their pregnancy. This field is essential for studying the impact of opioid exposure or intervention on placental and fetal outcomes.</li>
+        </ul>
+        <h4 style="padding-left: 20px;">Sex</h4>
+        <ul>
+            <li><strong>Sex (Infant Sex):</strong> The biological sex of the infants born during the study. This information may be relevant in analyses considering sex-specific developmental outcomes.</li>
+        </ul>
+        <h4 style="padding-left: 20px;">GA (Gestational Age)</h4>
+        <ul>
+            <li><strong>GA:</strong> Represents the gestational age, in weeks, at the time of delivery. This metric is crucial for understanding the maturity of the infant at birth and correlating it with various health parameters.</li>
+        </ul>
+        <h4 style="padding-left: 20px;">Birth Weight (BW)</h4>
+        <ul>
+            <li><strong>BW:</strong> The birth weight of the infant, measured in grams. Birth weight is a key indicator of neonatal health and can influence various future health outcomes.</li>
+        </ul>
+        <h4 style="padding-left: 20px;">Race</h4>
+        <ul>
+            <li><strong>Race (Maternal Race):</strong> The racial background of the mother, categorized into White, Black, or Other/Unknown. This data helps in understanding racial disparities in health outcomes.</li>
+        </ul>
+        <h4 style="padding-left: 20px;">Ethnicity</h4>
+        <ul>
+            <li><strong>Ethnicity (Maternal Ethnicity):</strong> The ethnic background of the mother, indicating whether she is Hispanic or Non-Hispanic, or if ethnicity is unknown. This is used for demographic analyses and in studies focusing on ethnic differences in health outcomes.</li>
+        </ul>
+        <h4 style="padding-left: 20px;">Opioid Type</h4>
+        <ul>
+            <li><strong>Opioid Type:</strong> Specifies the type of opioid exposure if applicable, such as Buprenorphine, Methadone, or illicit opioids. This field provides details necessary for deeper analysis of specific opioid effects on pregnancy and infant health.</li>
+        </ul>
+        <h4 style="padding-left: 20px;">RNA Integrity Number (RIN)</h4>
+        <ul>
+            <li><strong>RIN:</strong> A measure of the quality of RNA extracted from samples. Higher values indicate better integrity and reliability of the RNA sample for sequencing and analysis.</li>
+        </ul><br><br><br>
+    `;
+}
+
+
+</script>
+
+</body>
+</html>
